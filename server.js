@@ -65,7 +65,7 @@ app.post("/analyze", upload.single("resume"), async (req, res) => {
       throw new Error("Invalid response from Gemini API");
     }
 
-    const aiResponse = response.response.text();
+    const aiResponse =response.text();
 
     res.json({ analysis: aiResponse });
   } catch (error) {
