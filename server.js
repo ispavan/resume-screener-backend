@@ -17,7 +17,7 @@ const upload = multer({ storage: storage });
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY);
 
 app.post("/analyze", upload.single("resume"), async (req, res) => {
-  const jobDescription = req.body.jobDescription; // Get job description from frontend
+  const jobDescription = req.body.jobDescription;
 
   if (!req.file) {
     return res.status(400).json({ message: "No resume uploaded" });
@@ -31,9 +31,9 @@ app.post("/analyze", upload.single("resume"), async (req, res) => {
   if (req.file.mimetype === "application/pdf") {
     try {
       console.log("Extracting text from uploaded PDF...");
-      const pdfData = await pdfParse(req.file.buffer);
+      const pdfData = await pdfParse(req.file.buffer); // ✅ Process uploaded file
       resumeText = pdfData.text.trim();
-      console.log("Extracted text:", resumeText.substring(0, 100)); // Log first 100 chars
+      console.log("Extracted text:", resumeText.substring(0, 100));
     } catch (err) {
       console.error("Error processing PDF:", err);
       return res.status(500).json({ message: "Failed to process PDF" });
@@ -65,7 +65,7 @@ app.post("/analyze", upload.single("resume"), async (req, res) => {
       throw new Error("Invalid response from Gemini API");
     }
 
-    const aiResponse =response.text();
+    const aiResponse = response.response.text();
 
     res.json({ analysis: aiResponse });
   } catch (error) {
